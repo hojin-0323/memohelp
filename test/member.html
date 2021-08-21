@@ -1,0 +1,130 @@
+ <!DOCTYPE>
+<html>
+ <head>
+ <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+ <script>
+  $(document).ready(function(){
+   //삭제
+   $('#btn_remove').on('click',function(){
+    var ck = new Array();
+    $('#ck:checked').each(function(index,item){    //배열이라는전제조건하에서실행
+     ck.push($(item).val());
+    });
+    $.ajax({
+     url:'/remove',
+     type:'get',
+     data:{ck:ck},
+     success:function(data){
+      alert(data+'삭제');
+      $('#btn_list').trigger('click');
+     }
+    });
+   });
+   //수정
+   $('#btn_modify').on('click',function(){
+    var id=$('#id').val();
+    var pw=$('#pw').val();
+    var name=$('#name').val();
+    var age=$('#age').val();
+    var gender=$('#gender').val();
+    $.ajax({
+     url:'/modifyById',
+     type:'post',
+     data:{id:id,pw:pw,name:name,age:age,gender:gender},
+     success:function(data){
+      alert(data+'님 수정');
+      $('#btn_list').trigger('click');
+     }
+    });
+   });
+   //추가
+   $('#btn_add').on('click',function(){
+    var id=$('#id').val();
+    var pw=$('#pw').val();
+    var name=$('#name').val();
+    var age=$('#age').val();
+    var gender=$('#gender').val();
+    $.ajax({
+     url:'/add',
+     type:'post',
+     data:{id:id,pw:pw,name:name,age:age,gender:gender},
+     success:function(data){
+      alert(data+'님 추가');
+      $('#btn_list').trigger('click');
+     }
+    });
+   });
+   // 목록
+   $('#btn_list').on('click',function(){
+    $.ajax({    //이 버튼을 클릭하면 list를 요청해라 
+     url:'/list',
+     type:'get',//전부다 주는거기 때문에 data 필요없다. 
+     success:function(data){
+      $('#list').empty();
+      $(data).each(function(index,item){
+       $('#list').append('<tr>');
+       $('#list').append('<td><input type="checkbox" id="ck" value="'+item.id+'"></td>');
+       $('#list').append('<td>'+item.id+'</td>');
+       $('#list').append('<td>'+item.pw+'</td>');
+       $('#list').append('<td>'+item.name+'</td>');
+       $('#list').append('<td>'+item.age+'</td>');
+       $('#list').append('<td>'+item.gender+'</td>');
+       $('#list').append('</tr>');
+      });  
+     }   
+    });
+   });
+  });
+ </script>
+ </head>
+ <body>
+ <table border="1">
+  <thead>
+   <tr>
+    <th>id</th>
+    <th>pw</th>
+    <th>name</th>
+    <th>age</th>
+    <th>gender</th>
+    <th>추가</th>
+    <th>수정</th>
+   </tr>
+  </thead>
+  <tbody>
+   <tr>
+    <td><input type="text" id="id"></td>
+    <td><input type="password" id="pw"></td>
+    <td><input type="text" id="name"></td>
+    <td><input type="text" id="age"></td>
+    <td>
+     <select id="gender">
+      <option value="m">남</option>
+      <option value="f">여</option>
+     </select>
+    </td>
+    <td><button id="btn_add">add</button></td>
+    <td><button id="btn_modify">modify</button></td>
+   </tr>
+  </tbody>
+ </table>
+ <button id="btn_list">회원리스트</button>
+ <table border="1">
+  <thead>
+  <tr>
+   <th></th>
+   <th>id</th>
+   <th>pw</th>
+   <th>name</th>
+   <th>age</th>
+   <th>gender</th>
+  </tr>
+  </thead>
+  <tbody id="list">
+  </tbody>
+ </table>
+ <button id="btn_remove">remove</button>
+ </body>
+</html>
+
+
+출처: https://chocobeans.tistory.com/entry/mysql데이터를-웹브라우저에서-출력하기 [keep moving keep living]
